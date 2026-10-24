@@ -1,0 +1,35 @@
+[
+  {
+    "key": "mtg",
+    "name": "Magic: The Gathering",
+    "category": "Trading card game",
+    "color": "#c2410c",
+    "formats": ["Commander", "Draft", "Standard", "Modern", "Pauper"],
+    "defaultDurationMinutes": 240,
+    "defaultCapacity": 16,
+    "maxCapacity": 30,
+    "minPlayers": 8
+  },
+  {
+    "key": "pokemon",
+    "name": "Pokémon TCG",
+    "category": "Trading card game",
+    "color": "#ca8a04",
+    "formats": ["Standard", "Expanded", "Prerelease"],
+    "defaultDurationMinutes": 180,
+    "defaultCapacity": 24,
+    "maxCapacity": 30,
+    "minPlayers": 6
+  },
+  {
+    "key": "swu",
+    "name": "Star Wars: Unlimited",
+    "category": "Trading card game",
+    "color": "#1d4ed8",
+    "formats": ["Premier", "Twin Suns", "Sealed", "Draft"],
+    "defaultDurationMinutes": 210,
+    "defaultCapacity": 16,
+    "maxCapacity": 30,
+    "minPlayers": 4
+  }
+]
