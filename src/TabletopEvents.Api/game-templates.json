@@ -31,5 +31,16 @@
     "defaultCapacity": 16,
     "maxCapacity": 30,
     "minPlayers": 4
+  },
+  {
+    "key": "lotr-lcg",
+    "name": "The Lord of the Rings: The Card Game",
+    "category": "Cooperative living card game",
+    "color": "#15803d",
+    "formats": ["Scenario Night", "Campaign Session"],
+    "defaultDurationMinutes": 180,
+    "defaultCapacity": 8,
+    "maxCapacity": 16,
+    "minPlayers": 1
   }
 ]
