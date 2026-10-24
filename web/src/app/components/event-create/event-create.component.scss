@@ -1,0 +1,6 @@
+// Two fields side by side on wide screens (date + time, duration + capacity), stacked on phones.
+.row {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}

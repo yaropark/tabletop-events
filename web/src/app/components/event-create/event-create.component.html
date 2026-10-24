@@ -1,0 +1,68 @@
+<div class="page-head"><h1>New event</h1></div>
+
+<form class="card form" [formGroup]="form" (ngSubmit)="submit()">
+  <label>
+    Event name
+    <input formControlName="name" maxlength="120" placeholder="Friday Night Magic" />
+    <small class="error">{{ problem()?.errors?.['name'] }}</small>
+  </label>
+
+  <label>
+    Game
+    <select formControlName="templateKey">
+      <option value="" disabled>Choose a game…</option>
+      @for (t of templates() ?? []; track t.key) {
+        <option [value]="t.key">{{ t.name }}</option>
+      }
+    </select>
+    <small class="error">{{ problem()?.errors?.['templateKey'] }}</small>
+  </label>
+
+  @if (template(); as t) {
+    <label>
+      Format
+      <select formControlName="format">
+        @for (f of t.formats; track f) {
+          <option [value]="f">{{ f }}</option>
+        }
+      </select>
+      <small class="error">{{ problem()?.errors?.['format'] }}</small>
+    </label>
+
+    <div class="row">
+      <label>
+        Date
+        <input type="date" formControlName="date" />
+      </label>
+      <label>
+        Start time
+        <input type="time" formControlName="time" />
+      </label>
+    </div>
+    <small class="error">{{ problem()?.errors?.['startLocal'] }}</small>
+
+    <div class="row">
+      <label>
+        Duration (minutes)
+        <input type="number" formControlName="durationMinutes" min="15" step="15" />
+        <small class="error">{{ problem()?.errors?.['durationMinutes'] }}</small>
+      </label>
+      <label>
+        Player capacity
+        <input type="number" formControlName="capacity" [min]="t.minPlayers" [max]="t.maxCapacity" />
+        <small class="muted">{{ t.minPlayers }}–{{ t.maxCapacity }} players for {{ t.name }}</small>
+        <small class="error">{{ problem()?.errors?.['capacity'] }}</small>
+      </label>
+    </div>
+
+    <label>
+      Location
+      <input formControlName="location" placeholder="Defaults to the store address" />
+    </label>
+  }
+
+  @if (problem()?.detail; as detail) {
+    <p class="alert error">{{ detail }}</p>
+  }
+  <button type="submit" [disabled]="form.invalid || saving()">Create event</button>
+</form>

@@ -1,0 +1,66 @@
+@if (data(); as d) {
+  @if (d.event; as e) {
+    <div class="page-head">
+      <p class="tag" [style.background]="e.color">{{ e.gameName }} · {{ e.format }}</p>
+      <h1>{{ e.name }}</h1>
+      <p>
+        {{ e.startLocal | date: 'EEEE, MMMM d, y' }} · {{ e.startLocal | date: 'h:mm a' }} –
+        {{ e.endLocal | date: 'h:mm a' }} <span class="muted">({{ e.timeZone }})</span>
+      </p>
+      <p>{{ e.location }}</p>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Players</h2>
+        <p class="big">{{ e.registeredCount }} / {{ e.capacity }}</p>
+        <div class="meter"><div [style.width.%]="(100 * e.registeredCount) / e.capacity"></div></div>
+        <p>
+          @if (e.seatsLeft === 0) {
+            <strong>Event is full.</strong>
+          } @else {
+            {{ e.seatsLeft }} seat{{ e.seatsLeft === 1 ? '' : 's' }} left.
+          }
+          @if (e.registeredCount >= e.minPlayers) {
+            Enough players to start.
+          } @else {
+            Needs {{ e.minPlayers - e.registeredCount }} more to start (minimum {{ e.minPlayers }}).
+          }
+        </p>
+        <a class="button secondary" [href]="eventService.getCalendarInviteUrl(e.id)" download>Add to calendar (.ics)</a>
+
+        <h3>Registered</h3>
+        <ol class="registrants">
+          @for (r of d.registrants; track $index) {
+            <li>{{ r.name }}</li>
+          } @empty {
+            <li class="muted">No one yet.</li>
+          }
+        </ol>
+      </section>
+
+      <section class="card center">
+        <h2>Register</h2>
+        <p class="caption">Scan QR code</p>
+        <img class="qr" [src]="eventService.getQrCodeUrl(e.id)" alt="QR code for the registration link" />
+        <p class="caption">click on link below</p>
+        <p class="caption registration-link"><a [routerLink]="['/register', e.id]">{{ e.registrationUrl }}</a></p>
+        @if (isLocalhost(e.registrationUrl)) {
+          <div class="alert hint">
+            <p>This code points to <strong>localhost</strong>, which a phone can't open. Options:</p>
+            <ol>
+              <li>
+                Open this page using your computer's network address (e.g. {{ exampleLanUrl }}; find it
+                with <code>ipconfig</code>) for phones on the same Wi-Fi. On Windows, that Wi-Fi must be set
+                to <strong>Private</strong>: Settings → Network &amp; internet → Wi-Fi → Private network.
+              </li>
+              <li>Start with <code>docker compose --profile public up</code> for a public link.</li>
+            </ol>
+          </div>
+        }
+      </section>
+    </div>
+  } @else {
+    <p class="alert error">Event not found.</p>
+  }
+}

@@ -10,10 +10,10 @@ RUN npx ng build
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS api
 WORKDIR /src
 COPY nuget.config ./
-COPY src/TabletopEvents.Api/TabletopEvents.Api.csproj src/TabletopEvents.Api/
-RUN dotnet restore src/TabletopEvents.Api/TabletopEvents.Api.csproj
-COPY src/ src/
-RUN dotnet publish src/TabletopEvents.Api -c Release -o /app --no-restore
+COPY api/TabletopEvents.Api/TabletopEvents.Api.csproj api/TabletopEvents.Api/
+RUN dotnet restore api/TabletopEvents.Api/TabletopEvents.Api.csproj
+COPY api/TabletopEvents.Api/ api/TabletopEvents.Api/
+RUN dotnet publish api/TabletopEvents.Api -c Release -o /app --no-restore
 
 # 3. One container: the API serves the Angular build from wwwroot
 FROM mcr.microsoft.com/dotnet/aspnet:10.0

@@ -1,0 +1,14 @@
+<div class="page-head">
+  <h1>Event calendar</h1>
+  <p class="muted">Click a day to schedule an event there, or an event to open it.</p>
+</div>
+
+<div class="card">
+  <full-calendar [options]="options" />
+</div>
+
+<ul class="legend">
+  @for (t of templates() ?? []; track t.key) {
+    <li><span class="swatch" [style.background]="t.color"></span>{{ t.name }}</li>
+  }
+</ul>
