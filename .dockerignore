@@ -1,0 +1,9 @@
+.git
+**/bin
+**/obj
+**/*.db*
+web/node_modules
+web/dist
+web/.angular
+tests
+NOTES.md

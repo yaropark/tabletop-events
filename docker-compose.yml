@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      # Set PUBLIC_BASE_URL to http://<your-LAN-IP>:8080 so QR codes work from a phone.
+      Store__PublicBaseUrl: ${PUBLIC_BASE_URL:-http://localhost:8080}
+    volumes:
+      - tabletop-data:/app/data
+
+volumes:
+  tabletop-data:
