@@ -8,8 +8,13 @@ public sealed class StoreOptions
     public string Address { get; set; } = "";
     /// <summary>IANA time zone id. Organizers enter event times as wall-clock time in this zone.</summary>
     public string TimeZone { get; set; } = "America/Chicago";
-    /// <summary>Base URL players reach the app on. Used for registration links and QR codes.</summary>
-    public string PublicBaseUrl { get; set; } = "http://localhost:8080";
+    /// <summary>
+    /// Base URL players reach the app on, for registration links and QR codes.
+    /// Optional: when empty, see <see cref="PublicUrls"/> for how it is discovered.
+    /// </summary>
+    public string PublicBaseUrl { get; set; } = "";
+    /// <summary>Optional cloudflared metrics address; when the tunnel runs, its public hostname is used.</summary>
+    public string TunnelMetricsUrl { get; set; } = "";
 }
 
 public sealed class StoreClock(IOptions<StoreOptions> options, TimeProvider time)

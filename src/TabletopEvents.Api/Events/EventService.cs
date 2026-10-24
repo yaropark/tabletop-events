@@ -5,7 +5,8 @@ using TabletopEvents.Api.Templates;
 
 namespace TabletopEvents.Api.Events;
 
-public sealed class EventService(Database db, TemplateRepository templates, StoreClock clock, IOptions<StoreOptions> store)
+public sealed class EventService(
+    Database db, TemplateRepository templates, StoreClock clock, IOptions<StoreOptions> store, PublicUrls urls)
 {
     private const string SelectEvents = """
         SELECT e.Id, e.TemplateKey, e.Name, e.Format, e.StartUtc, e.DurationMinutes, e.Capacity,
@@ -103,8 +104,6 @@ public sealed class EventService(Database db, TemplateRepository templates, Stor
             .ToList();
     }
 
-    public string RegistrationUrl(int id) => $"{store.Value.PublicBaseUrl.TrimEnd('/')}/register/{id}";
-
     private EventDetails ToDetails(EventRow r)
     {
         var (startLocal, endLocal, startUtc, endUtc) = Times(r);
@@ -115,7 +114,7 @@ public sealed class EventService(Database db, TemplateRepository templates, Stor
             (int)r.DurationMinutes, r.Location, (int)r.Capacity, (int)r.MinPlayers, (int)r.RegisteredCount,
             seatsLeft,
             RegistrationOpen: seatsLeft > 0 && startUtc > clock.UtcNow,
-            RegistrationUrl((int)r.Id));
+            urls.RegistrationUrl((int)r.Id));
     }
 
     private (DateTime StartLocal, DateTime EndLocal, DateTime StartUtc, DateTime EndUtc) Times(EventRow r)

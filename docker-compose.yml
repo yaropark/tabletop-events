@@ -4,10 +4,22 @@ services:
     ports:
       - "8080:8080"
     environment:
-      # Set PUBLIC_BASE_URL to http://<your-LAN-IP>:8080 so QR codes work from a phone.
-      Store__PublicBaseUrl: ${PUBLIC_BASE_URL:-http://localhost:8080}
+      # Optional. Without it, QR codes use the tunnel's public address if running,
+      # otherwise the address you opened the app with (use your LAN IP for phones on the same Wi-Fi).
+      Store__PublicBaseUrl: ${PUBLIC_BASE_URL:-}
+      Store__TunnelMetricsUrl: http://tunnel:2000
     volumes:
       - tabletop-data:/app/data
+
+  # Optional temporary public https address via a Cloudflare quick tunnel (no account needed):
+  #   docker compose --profile public up --build
+  # The app stays on this machine; the address stops working when the tunnel stops.
+  tunnel:
+    image: cloudflare/cloudflared:2026.9.3
+    profiles: [public]
+    command: tunnel --no-autoupdate --metrics 0.0.0.0:2000 --url http://app:8080
+    depends_on:
+      - app
 
 volumes:
   tabletop-data:

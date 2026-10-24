@@ -54,7 +54,15 @@ import { Api } from './api';
             <h2>Register</h2>
             <img class="qr" [src]="api.qrUrl(e.id)" alt="QR code for the registration link" />
             <p><a [routerLink]="['/register', e.id]">{{ e.registrationUrl }}</a></p>
-            <p class="muted">Players scan this code to sign up.</p>
+            @if (isLocalhost(e.registrationUrl)) {
+              <p class="alert hint">
+                This code points to <strong>localhost</strong>, which a phone can't open. Open this page using
+                your computer's network address (e.g. http://192.168.1.20:8080) for phones on the same Wi-Fi,
+                or start with <code>docker compose --profile public up</code> for a public link.
+              </p>
+            } @else {
+              <p class="muted">Players scan this code to sign up.</p>
+            }
           </section>
         </div>
       } @else {
@@ -65,6 +73,10 @@ import { Api } from './api';
 })
 export class EventPage {
   protected readonly api = inject(Api);
+
+  protected isLocalhost(url: string) {
+    return ['localhost', '127.0.0.1', '[::1]'].includes(new URL(url).hostname);
+  }
 
   // Refresh every few seconds so the organizer sees registrations arrive from players' phones.
   protected readonly data = toSignal(

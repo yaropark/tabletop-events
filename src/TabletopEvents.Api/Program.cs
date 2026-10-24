@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using TabletopEvents.Api;
 using TabletopEvents.Api.Data;
 using TabletopEvents.Api.Events;
@@ -13,7 +14,17 @@ builder.Services.AddSingleton<Database>();
 builder.Services.AddSingleton<TemplateRepository>();
 builder.Services.AddSingleton<EventService>();
 builder.Services.AddSingleton<RegistrationService>();
+builder.Services.AddSingleton<PublicUrls>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    // Behind the optional tunnel, trust X-Forwarded-Proto/Host so links use the public https address.
+    // A spoofed header only changes the links in the spoofer's own response.
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost;
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 
 var app = builder.Build();
 
@@ -29,6 +40,7 @@ if (app.Configuration.GetValue("SeedDemoData", true))
         app.Services.GetRequiredService<StoreClock>());
 }
 
+app.UseForwardedHeaders();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 app.UseDefaultFiles();

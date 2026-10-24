@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.Options;
 using QRCoder;
 using TabletopEvents.Api.Events;
 using TabletopEvents.Api.Registrations;
@@ -36,13 +35,12 @@ public static partial class Endpoints
                 ? Results.File(PngByteQRCodeHelper.GetQRCode(e.RegistrationUrl, QRCodeGenerator.ECCLevel.Q, 10), "image/png")
                 : Results.NotFound());
 
-        api.MapGet("/events/{id:int}/invite.ics", (int id, EventService events, StoreClock clock, IOptions<StoreOptions> store) =>
+        api.MapGet("/events/{id:int}/invite.ics", (int id, EventService events, StoreClock clock, PublicUrls urls) =>
         {
             if (events.Get(id) is not { } e)
                 return Results.NotFound();
 
-            var eventPageUrl = $"{store.Value.PublicBaseUrl.TrimEnd('/')}/events/{e.Id}";
-            var ics = CalendarInvite.Create(e, eventPageUrl, clock.UtcNow);
+            var ics = CalendarInvite.Create(e, urls.EventUrl(e.Id), clock.UtcNow);
             return Results.File(Encoding.UTF8.GetBytes(ics), "text/calendar; charset=utf-8", $"{Slug(e.Name)}.ics");
         });
 
