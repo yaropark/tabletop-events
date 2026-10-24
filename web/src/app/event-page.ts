@@ -52,16 +52,22 @@ import { Api } from './api';
 
           <section class="card center">
             <h2>Register</h2>
+            <p class="caption">Scan QR code</p>
             <img class="qr" [src]="api.qrUrl(e.id)" alt="QR code for the registration link" />
-            <p><a [routerLink]="['/register', e.id]">{{ e.registrationUrl }}</a></p>
+            <p class="caption">click on link below</p>
+            <p class="caption registration-link"><a [routerLink]="['/register', e.id]">{{ e.registrationUrl }}</a></p>
             @if (isLocalhost(e.registrationUrl)) {
-              <p class="alert hint">
-                This code points to <strong>localhost</strong>, which a phone can't open. Open this page using
-                your computer's network address (e.g. http://192.168.1.20:8080) for phones on the same Wi-Fi,
-                or start with <code>docker compose --profile public up</code> for a public link.
-              </p>
-            } @else {
-              <p class="muted">Players scan this code to sign up.</p>
+              <div class="alert hint">
+                <p>This code points to <strong>localhost</strong>, which a phone can't open. Options:</p>
+                <ol>
+                  <li>
+                    Open this page using your computer's network address (e.g. {{ exampleLanUrl }}; find it
+                    with <code>ipconfig</code>) for phones on the same Wi-Fi. On Windows, that Wi-Fi must be set
+                    to <strong>Private</strong>: Settings → Network &amp; internet → Wi-Fi → Private network.
+                  </li>
+                  <li>Start with <code>docker compose --profile public up</code> for a public link.</li>
+                </ol>
+              </div>
             }
           </section>
         </div>
@@ -73,6 +79,9 @@ import { Api } from './api';
 })
 export class EventPage {
   protected readonly api = inject(Api);
+
+  // Illustrative only: the app can't see the host's LAN IP from inside Docker, so this isn't a link.
+  protected readonly exampleLanUrl = `http://192.168.1.20${location.port ? ':' + location.port : ''}`;
 
   protected isLocalhost(url: string) {
     return ['localhost', '127.0.0.1', '[::1]'].includes(new URL(url).hostname);

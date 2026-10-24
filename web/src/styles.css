@@ -63,6 +63,8 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .alert.error { background: var(--danger-bg); color: var(--danger); }
 .alert.success { background: var(--success-bg); color: var(--success); }
 .alert.hint { background: #fff7e0; color: #7a5300; text-align: left; font-size: 0.9rem; }
+.alert.hint p { margin: 0 0 0.4rem; }
+.alert.hint ol { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.4rem; }
 
 .tag {
   display: inline-block; margin: 0; padding: 0.15rem 0.55rem; border-radius: 999px;
@@ -73,6 +75,8 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .meter div { height: 100%; background: var(--accent); }
 .registrants { padding-left: 1.4rem; }
 .qr { width: 240px; max-width: 100%; image-rendering: pixelated; }
+.caption { margin: 0.3rem 0; }
+.registration-link { margin-bottom: 1.5em; }
 
 .legend { display: flex; flex-wrap: wrap; gap: 1rem; list-style: none; padding: 0; }
 .legend li { display: flex; align-items: center; gap: 0.4rem; }
