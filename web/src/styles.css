@@ -22,7 +22,7 @@ h2 { margin-top: 0; font-size: 1.1rem; }
 a { color: var(--accent); }
 
 .topbar {
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem;
   padding: 0.75rem 1rem; background: var(--surface); border-bottom: 1px solid var(--border);
 }
 .topbar nav { display: flex; gap: 1rem; }
@@ -46,7 +46,7 @@ main { max-width: 1000px; margin: 0 auto; padding: 1rem; }
 .form label { display: grid; gap: 0.3rem; font-weight: 500; }
 .row { display: grid; gap: 0.9rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 input, select {
-  font: inherit; padding: 0.5rem 0.6rem; border: 1px solid var(--border); border-radius: 6px; background: #fff;
+  width: 100%; min-width: 0; font: inherit; padding: 0.5rem 0.6rem; border: 1px solid var(--border); border-radius: 6px; background: #fff;
 }
 small { font-weight: 400; }
 small.error:empty { display: none; }
@@ -78,3 +78,6 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
 
 .fc .fc-event { cursor: pointer; }
+/* Let event titles wrap so the seat count "(7/8)" stays visible in the month grid. */
+.fc .fc-daygrid-block-event .fc-event-main-frame { display: block; }
+.fc .fc-daygrid-block-event .fc-event-title { white-space: normal; }

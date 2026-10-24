@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Options;
@@ -69,7 +70,10 @@ public static partial class Endpoints
 
     private static string Slug(string name)
     {
-        var slug = NonSlugChars().Replace(name.ToLowerInvariant(), "-").Trim('-');
+        // "Pokémon" -> "pokemon": split accents off their letters and drop them before slugging.
+        var plain = string.Concat(name.Normalize(NormalizationForm.FormD)
+            .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark));
+        var slug = NonSlugChars().Replace(plain.ToLowerInvariant(), "-").Trim('-');
         return slug.Length == 0 ? "event" : slug;
     }
 

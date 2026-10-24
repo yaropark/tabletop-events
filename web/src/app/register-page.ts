@@ -3,7 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { catchError, of } from 'rxjs';
+import { BehaviorSubject, catchError, of, switchMap } from 'rxjs';
 import { Api, Problem, RegistrationResponse, toProblem } from './api';
 
 @Component({
@@ -38,7 +38,7 @@ import { Api, Problem, RegistrationResponse, toProblem } from './api';
                 <small class="error">{{ problem()?.errors?.['name'] }}</small>
               </label>
               <label>
-                Email <span class="muted">(optional)</span>
+                <span>Email <span class="muted">(optional)</span></span>
                 <input type="email" formControlName="email" autocomplete="email" />
                 <small class="error">{{ problem()?.errors?.['email'] }}</small>
               </label>
@@ -59,7 +59,10 @@ export class RegisterPage {
   protected readonly api = inject(Api);
   private readonly id = Number(inject(ActivatedRoute).snapshot.paramMap.get('id'));
 
-  protected readonly event = toSignal(this.api.event(this.id).pipe(catchError(() => of(null))));
+  private readonly reload = new BehaviorSubject<void>(undefined);
+  protected readonly event = toSignal(
+    this.reload.pipe(switchMap(() => this.api.event(this.id).pipe(catchError(() => of(null))))),
+  );
   protected readonly registered = signal<RegistrationResponse | null>(null);
   protected readonly problem = signal<Problem | null>(null);
   protected readonly saving = signal(false);
@@ -78,6 +81,8 @@ export class RegisterPage {
       error: (err) => {
         this.problem.set(toProblem(err));
         this.saving.set(false);
+        // Seats may have changed since the page loaded (e.g. someone took the last one).
+        this.reload.next();
       },
     });
   }
